@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby
+
+require ENV['TM_SUPPORT_PATH'] + '/lib/tm/executor'
+require ENV['TM_SUPPORT_PATH'] + '/lib/tm/save_current_document'
+
+TextMate.save_current_document
+TextMate::Executor.make_project_master_current_document
+
+COMMAND = ENV['TM_SBCL'] || 'sbcl'
+
+# check for sbcl...
+sbcl_available = (`which #{COMMAND}`.strip != '')
+  
+# display instructions if sbcl is not found...
+unless sbcl_available
+  TextMate::HTMLOutput.show(:title =&gt; 'No SBCL :(', :sub_title =&gt; "") do |io|
+    io &lt;&lt; "&lt;h2&gt;SBCL seems not to be available&lt;/h2&gt;"
+    io &lt;&lt; "&lt;p&gt;Please add the directory containing “&lt;code&gt;#{COMMAND}&lt;/code&gt;” to &lt;code&gt;PATH&lt;/code&gt; in TextMate's Shell Variables preferences.&lt;/p&gt;"
+    io &lt;&lt; "&lt;p&gt;If you don't have installed SBCL yet, get it now:&lt;/p&gt;"
+    io &lt;&lt; "&lt;ol&gt;"
+    io &lt;&lt; "&lt;li&gt;Download the binary release for your platform from &lt;a href=\"#\" onclick=\"TextMate.system('/usr/bin/open http://www.sbcl.org/platform-table.html, null')\"&gt;http://www.sbcl.org/platform-table.html&lt;/a&gt;.&lt;/li&gt;"
+    io &lt;&lt; "&lt;li&gt;Install it according to &lt;a href=\"#\" onclick=\"TextMate.system('/usr/bin/open http://www.sbcl.org/getting.html', null)\"&gt;http://www.sbcl.org/getting.html&lt;/a&gt;:
+             &lt;pre&gt;bzip2 -cd sbcl-SOME_VERSION-binary.tar.bz2 | tar xvf - &amp;&amp; cd sbcl-SOME_VERSION &amp;&amp; sudo sh install.sh&lt;/pre&gt;
+           &lt;/li&gt;"
+    io &lt;&lt; "&lt;li&gt;Profit! &lt;pre&gt;sbcl --version&lt;/pre&gt;&lt;/li&gt;"
+    io &lt;&lt; "&lt;/ol&gt;"
+    
+  end  
+  
+# otherwise run the script...
+else
+  TextMate::Executor.run(COMMAND, '--script', ENV['TM_FILEPATH'])
+end
+</string>
+	<key>input</key>
+	<string>document</string>
+	<key>keyEquivalent</key>
+	<string>@r</string>
+	<key>name</key>
+	<string>Run with SBCL</string>
+	<key>output</key>
+	<string>showAsHTML</string>
+	<key>scope</key>
+	<string>source.lisp</string>
+	<key>uuid</key>
+	<string>84160BEC-22A1-4B24-9058-46B273A16647</string>
+</dict>
+</plist>
