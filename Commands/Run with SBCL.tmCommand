@@ -23,6 +23,12 @@ unless sbcl_available
   TextMate::HTMLOutput.show(:title =&gt; 'No SBCL :(', :sub_title =&gt; "") do |io|
     io &lt;&lt; "&lt;h2&gt;SBCL seems not to be available&lt;/h2&gt;"
     io &lt;&lt; "&lt;p&gt;Please add the directory containing “&lt;code&gt;#{COMMAND}&lt;/code&gt;” to &lt;code&gt;PATH&lt;/code&gt; in TextMate's Shell Variables preferences.&lt;/p&gt;"
+    io &lt;&lt; "&lt;p&gt;The current PATH is:&lt;/p&gt;"
+    io &lt;&lt; "&lt;blockquote&gt;"
+      ENV["PATH"].split(":").each do |p|
+        io &lt;&lt; htmlize(p + "\n")
+      end
+    io &lt;&lt; "&lt;/blockquote&gt;"
     io &lt;&lt; "&lt;p&gt;If you don't have installed SBCL yet, get it now:&lt;/p&gt;"
     io &lt;&lt; "&lt;ol&gt;"
     io &lt;&lt; "&lt;li&gt;Download the binary release for your platform from &lt;a href=\"#\" onclick=\"TextMate.system('/usr/bin/open http://www.sbcl.org/platform-table.html, null')\"&gt;http://www.sbcl.org/platform-table.html&lt;/a&gt;.&lt;/li&gt;"
